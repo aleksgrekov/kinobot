@@ -6,11 +6,19 @@ if not find_dotenv():
 else:
     load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+vars_list = ['BOT_TOKEN', 'API_KEY', 'BASE_URL']
+
+ENVS = dict()
+for element in vars_list:
+    value = os.getenv(element)
+    if value:
+        ENVS[element] = value
+    else:
+        exit('{} отсутствует в переменных окружения'.format(element))
+
+DB_PATH = os.path.join('database', 'database.db')
+
 DEFAULT_COMMANDS = (
     ('start', 'Запустить бота.'),
-    ('hello_world', 'Тоже запускает бота.'),
-    ('help', 'Получить информацию о стандартных командах')
+    ('help', 'Получить информацию о командах')
 )
-
-# API_KEY = os.getenv("API_KEY")

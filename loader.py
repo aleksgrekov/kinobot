@@ -1,5 +1,5 @@
 from telebot import TeleBot
 
-from config_data.config import BOT_TOKEN
+from config_data.config import ENVS
 
-bot = TeleBot(token=BOT_TOKEN)
+bot = TeleBot(token=ENVS.get('BOT_TOKEN'))
