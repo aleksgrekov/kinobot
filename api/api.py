@@ -12,7 +12,7 @@ def api_request(sort_type: int, page_num: int) -> requests.Response:
     }
     params: Dict[str, Any] = {
         'page': page_num,
-        'limit': 5,
+        'limit': 10,
         'sortField': 'rating.kp',
         'sortType': sort_type,
         'type': 'movie',
@@ -20,13 +20,15 @@ def api_request(sort_type: int, page_num: int) -> requests.Response:
                          'enName', 'ageRating'],
         'notNullFields': 'name'
     }
-    response = requests.get(ENVS.get('BASE_URL'), params=params, headers=headers)
+
+    response = requests.get(url=ENVS.get('BASE_URL'), params=params, headers=headers)
 
     return response
 
 
 def suggested_films(sort_type: int, page: int = 1) -> List[Film]:
     movie_response = api_request(sort_type=sort_type, page_num=page)
+
     if movie_response.status_code != 200:
         print('Не удалось получить список фильмов')
         exit(1)

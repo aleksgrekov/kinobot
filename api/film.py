@@ -11,6 +11,10 @@ class Film:
         self.__countries = countries
         self.__poster = poster
 
+    @property
+    def poster(self):
+        return self.__poster.get('previewUrl', self.__poster.get('url'))
+
     def __str__(self):
         movie_data = f'Название: {self.__name}'
         if self.__enname:
