@@ -13,7 +13,10 @@ class Film:
 
     @property
     def poster(self):
-        return self.__poster.get('previewUrl', self.__poster.get('url'))
+        if isinstance(self.__poster, dict):
+            return self.__poster.get('previewUrl', self.__poster.get('url'))
+        else:
+            return None
 
     def __str__(self):
         movie_data = f'Название: {self.__name}'
@@ -25,11 +28,18 @@ class Film:
         countries = [country.get('name') for country in self.__countries]
         if countries:
             movie_data += '\n' + ', '.join(countries)
-        movie_data += f"\n\nРейтинг сайта \"Кинопоиск\": {self.__rating.get('kp', 'рейтинг скрыт')}"
+        movie_data += '\n\nРейтинг:\n\t\tKP: {kp_rating}\n\t\tIMDb: {imdb_rating}'.format(
+            kp_rating=self.__rating.get('kp', 'рейтинг скрыт'),
+            imdb_rating=self.__rating.get('imdb', 'рейтинг скрыт')
+        )
         if self.__year:
             movie_data += f'\nГод выпуска: {self.__year}'
+        else:
+            movie_data += f'\nГод выпуска не указан'
         if self.__agerating:
             movie_data += f'\nВозрастной рейтинг: {self.__agerating}'
+        else:
+            movie_data += f'\nБез возрастных ограничений'
         if self.__movielength:
             movie_data += f'\nПродолжительность: {self.__movielength} мин.'
         if self.__description:
