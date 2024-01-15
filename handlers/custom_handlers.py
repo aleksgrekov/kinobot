@@ -4,8 +4,7 @@ from telebot.types import Message
 from loader import bot
 from api.api import suggested_films
 from states.states import States
-from keyboards.high_keyboard import high_markup, high_markup_dict
-from keyboards.low_keyboard import low_markup, low_markup_dict
+from keyboards import high_keyboard, low_keyboard, custom_keyboard
 
 
 def go_to_count(message: Message, sort_type: int, markup: Dict[str, str]) -> None:
@@ -44,29 +43,43 @@ def get_films(message: Message, sort_type: int, limit: int, sort_field: str) -> 
 @bot.message_handler(commands=['high'])
 def send_high(message: Message) -> None:
     bot.send_message(message.chat.id, 'Нажми на кнопку и выбери подборку, которую ты хочешь получить! 👇',
-                     reply_markup=high_markup)
+                     reply_markup=high_keyboard.high_markup)
     bot.set_state(message.from_user.id, States.high_type, message.chat.id)
     with bot.retrieve_data(message.from_user.id, message.chat.id) as film_data:
         film_data['state'] = States.high_type
 
 
+@bot.message_handler(state=States.high_type)
+def state_high(message: Message) -> None:
+    go_to_count(message=message, sort_type=-1, markup=high_keyboard.high_markup_dict)
+
+
 @bot.message_handler(commands=['low'])
 def send_low(message: Message) -> None:
     bot.send_message(message.chat.id, 'Нажми на кнопку и выбери подборку, которую ты хочешь получить! 👇',
-                     reply_markup=low_markup)
+                     reply_markup=low_keyboard.low_markup)
     bot.set_state(message.from_user.id, States.low_type, message.chat.id)
     with bot.retrieve_data(message.from_user.id, message.chat.id) as film_data:
         film_data['state'] = States.low_type
 
 
-@bot.message_handler(state=States.high_type)
-def state_high(message: Message) -> None:
-    go_to_count(message=message, sort_type=-1, markup=high_markup_dict)
-
-
 @bot.message_handler(state=States.low_type)
 def state_low(message: Message) -> None:
-    go_to_count(message=message, sort_type=1, markup=low_markup_dict)
+    go_to_count(message=message, sort_type=1, markup=low_keyboard.low_markup_dict)
+
+
+@bot.message_handler(commands=['custom'])
+def send_high(message: Message) -> None:
+    bot.send_message(message.chat.id, 'Нажми на кнопку и выбери подборку, которую ты хочешь получить! 👇',
+                     reply_markup=custom_keyboard.custom_markup)
+    bot.set_state(message.from_user.id, States.custom_type, message.chat.id)
+    with bot.retrieve_data(message.from_user.id, message.chat.id) as film_data:
+        film_data['state'] = States.custom_type
+
+
+@bot.message_handler(state=States.custom_type)
+def state_low(message: Message) -> None:
+    go_to_count(message=message, sort_type=-1, markup=custom_keyboard.custom_markup_dict)
 
 
 @bot.message_handler(state=States.count)
