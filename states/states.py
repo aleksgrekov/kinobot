@@ -6,4 +6,5 @@ class States(StatesGroup):
     high_type = State()
     low_type = State()
     custom_type = State()
+    value_range = State()
     count = State()

@@ -5,7 +5,7 @@ from config_data.config import ENVS
 from api.film import Film
 
 
-def api_request(sort_type: int, limit: int, sort_field: str) -> requests.Response:
+def api_request(sort_type: int, limit: int, sort_field: str, range_value: str | None) -> requests.Response:
 
     headers: Dict[str, str] = {
         'accept': 'application/json',
@@ -23,15 +23,20 @@ def api_request(sort_type: int, limit: int, sort_field: str) -> requests.Respons
         'notNullFields': ['name', sort_field]
     }
     if sort_field == 'year':
-        params[sort_field] = '1874-2050'
+        if range_value:
+            params[sort_field] = range_value
+        else:
+            params[sort_field] = '1874-2050'
+    elif sort_field == 'rating.kp' and range_value:
+        params[sort_field] = range_value
 
     response = requests.get(url=ENVS.get('BASE_URL'), params=params, headers=headers)
 
     return response
 
 
-def suggested_films(sort_type: int, limit: int, sort_field: str) -> List[Film]:
-    movie_response = api_request(sort_type=sort_type, limit=limit, sort_field=sort_field)
+def suggested_films(sort_type: int, limit: int, sort_field: str, range_value: str | None) -> List[Film]:
+    movie_response = api_request(sort_type=sort_type, limit=limit, sort_field=sort_field, range_value=range_value)
 
     if movie_response.status_code != 200:
         print('Не удалось получить список фильмов')
