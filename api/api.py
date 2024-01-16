@@ -6,7 +6,6 @@ from api.film import Film
 
 
 def api_request(sort_type: int, limit: int, sort_field: str, range_value: str | None) -> requests.Response:
-
     headers: Dict[str, str] = {
         'accept': 'application/json',
         'X-API-KEY': ENVS.get('API_KEY')
@@ -36,7 +35,8 @@ def api_request(sort_type: int, limit: int, sort_field: str, range_value: str | 
 
 
 def suggested_films(sort_type: int, limit: int, sort_field: str, range_value: str | None) -> List[Film]:
-    movie_response = api_request(sort_type=sort_type, limit=limit, sort_field=sort_field, range_value=range_value)
+    movie_response: requests.Response = api_request(sort_type=sort_type, limit=limit, sort_field=sort_field,
+                                                    range_value=range_value)
 
     if movie_response.status_code != 200:
         print('Не удалось получить список фильмов')
