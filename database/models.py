@@ -26,7 +26,7 @@ class BotRequest(BaseModel):
     count = CharField()
 
     def __str__(self):
-        result = f'{self.req_id}. {self.req_date}\nЗапрос: {self.command} '
+        result = f'{self.req_date}\nЗапрос: {self.command} '
         if self.period:
             result += f'\nПериод: {self.period}'
         result += f'\nКоличество фильмов: {self.count}\n'

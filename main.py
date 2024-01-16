@@ -9,4 +9,4 @@ if __name__ == "__main__":
     bot.add_custom_filter(custom_filters.StateFilter(bot))
     create_models()
     set_default_commands(bot)
-    bot.polling()
+    bot.infinity_polling()
