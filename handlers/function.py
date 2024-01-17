@@ -7,6 +7,17 @@ from api.api import suggested_films
 
 
 def check_registration(message: Message) -> bool:
+    """
+    Проверка регистрации пользователя.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    :return: True, если пользователь зарегистрирован; False, если нет.
+    :rtype: bool
+
+    """
+
     user_id = message.from_user.id
     if User.get_or_none(User.user_id == user_id) is None:
         bot.reply_to(message, "Вы не зарегистрированы. Напишите /start")
@@ -16,6 +27,27 @@ def check_registration(message: Message) -> bool:
 
 
 def get_films(message: Message, sort_type: int, limit: int, sort_field: str, range_value: str | None) -> None:
+    """
+    Получение и отправка подборок фильмов пользователю.
+
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    :param: sort_type: Тип сортировки.
+    :type: int
+
+    :param: limit: Лимит фильмов в подборке.
+    :type: int
+
+    :param: sort_field : Поле для сортировки.
+    :type: str
+
+    :param: range_value: Значение для диапазона (если необходимо).
+    :type: str | None
+
+    """
+
     bot.send_message(message.chat.id, 'Подборка может занять некоторое время. Ожидайте!😜')
     bot.send_chat_action(chat_id=message.chat.id,
                          action='upload_photo')

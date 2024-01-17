@@ -6,6 +6,26 @@ from api.film import Film
 
 
 def api_request(sort_type: int, limit: int, sort_field: str, range_value: str | None) -> requests.Response:
+    """
+    Выполняет запрос к API КиноПоиск для получения списка фильмов.
+
+    :param sort_type: Тип сортировки (1 - по возрастанию, -1 - по убыванию).
+    :type sort_type: int
+
+    :param limit: Максимальное количество фильмов в ответе.
+    :type limit: int
+
+    :param sort_field: Поле для сортировки результатов запроса.
+    :type sort_field: str
+
+    :param range_value: Диапазон значений для определенного поля (год выпуска или рейтинг).
+    :type range_value: str or None
+
+    :return: Объект ответа от сервера API.
+    :rtype: requests.Response
+
+    """
+
     headers: Dict[str, str] = {
         'accept': 'application/json',
         'X-API-KEY': ENVS.get('API_KEY')
@@ -35,6 +55,26 @@ def api_request(sort_type: int, limit: int, sort_field: str, range_value: str | 
 
 
 def suggested_films(sort_type: int, limit: int, sort_field: str, range_value: str | None) -> List[Film]:
+    """
+    Получает список рекомендованных фильмов на основе заданных параметров сортировки.
+
+    :param sort_type: Тип сортировки (1 - по возрастанию, -1 - по убыванию).
+    :type sort_type: int
+
+    :param limit: Максимальное количество фильмов в ответе.
+    :type limit: int
+
+    :param sort_field: Поле для сортировки результатов запроса.
+    :type sort_field: str
+
+    :param range_value: Диапазон значений для определенного поля (год выпуска или рейтинг).
+    :type range_value: str or None
+
+    :return: Список объектов Film, представляющих рекомендованные фильмы.
+    :rtype: List[Film]
+
+    """
+
     movie_response: requests.Response = api_request(sort_type=sort_type, limit=limit, sort_field=sort_field,
                                                     range_value=range_value)
 
@@ -43,6 +83,7 @@ def suggested_films(sort_type: int, limit: int, sort_field: str, range_value: st
         exit(1)
 
     movie_data = movie_response.json()
+    print(movie_data)
 
     film_list = [Film(element.get('rating'),
                       element.get('movieLength'),

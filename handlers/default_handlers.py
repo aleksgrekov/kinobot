@@ -9,6 +9,14 @@ from config_data.config import DEFAULT_COMMANDS
 
 @bot.message_handler(commands=['start'])
 def handler_start(message: Message) -> None:
+    """
+    Обработчик команды /start для приветствия пользователя и регистрации в системе.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     user_id = message.from_user.id
     username = message.from_user.username
     first_name = message.from_user.first_name
@@ -34,6 +42,14 @@ def handler_start(message: Message) -> None:
 
 @bot.message_handler(commands=['help'])
 def send_help(message: Message) -> None:
+    """
+    Обработчик команды /help для предоставления справочной информации.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     bot.send_chat_action(chat_id=message.chat.id,
                          action='typing')
     command_list = ['/{} - {}'.format(command, desk) for command, desk in DEFAULT_COMMANDS]
@@ -42,8 +58,16 @@ def send_help(message: Message) -> None:
 
 
 @bot.message_handler(state="*", commands=['cancel'])
-def any_state(message):
+def any_state(message: Message):
+    """
+    Обработчик команды /cancel для отмены текущего состояния.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     bot.send_chat_action(chat_id=message.chat.id,
                          action='typing')
-    bot.send_message(message.chat.id, "До свидания!")
+    bot.send_message(message.chat.id, 'До свидания!')
     bot.delete_state(message.from_user.id, message.chat.id)

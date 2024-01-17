@@ -12,6 +12,14 @@ from keyboards import high_keyboard, low_keyboard, custom_keyboard
 
 @bot.message_handler(state='*', commands=['high'])
 def send_high(message: Message) -> None:
+    """
+    Обработчик команды /high для запроса подборок с высоким рейтингом или длительностью.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     if not check_registration(message=message):
         return
     bot.send_message(message.chat.id, 'Нажми на кнопку и выбери подборку, '
@@ -25,6 +33,15 @@ def send_high(message: Message) -> None:
 
 @bot.message_handler(state='*', commands=['low'])
 def send_low(message: Message) -> None:
+    """
+    Обработчик команды /low для запроса подборок с низким возрастным рейтингом,
+    самых старых или самых коротких фильмов.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     if not check_registration(message=message):
         return
     bot.send_message(message.chat.id, 'Нажми на кнопку и выбери подборку, '
@@ -38,6 +55,14 @@ def send_low(message: Message) -> None:
 
 @bot.message_handler(state='*', commands=['custom'])
 def send_custom(message: Message) -> None:
+    """
+    Обработчик команды /custom для запроса подборок с пользовательскими параметрами.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     if not check_registration(message=message):
         return
     bot.send_message(message.chat.id, 'Нажми на кнопку и выбери подборку, '
@@ -48,6 +73,14 @@ def send_custom(message: Message) -> None:
 
 @bot.message_handler(state="*", commands=['history'])
 def get_history(message: Message) -> None:
+    """
+    Обработчик команды /history для получения истории запросов пользователя.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     user_id = message.from_user.id
     user = User.get_or_none(User.user_id == user_id)
     if user is None:
@@ -68,6 +101,14 @@ def get_history(message: Message) -> None:
 
 @bot.message_handler(state=States.value_range)
 def input_range(message: Message) -> None:
+    """
+    Обработчик ввода пользовательского диапазона для команды /custom
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     if message.text == custom_keyboard.item1.text:
         bot.reply_to(message, 'Введи год выхода фильма (формат ввода: 2020) '
                               'или период (формат ввода: 1874-2050).')
@@ -88,6 +129,14 @@ def input_range(message: Message) -> None:
 
 @bot.message_handler(state=States.req_state)
 def req_state(message: Message) -> None:
+    """
+    Обработчик запроса подборок для команд (/high, /low, /custom)
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     with bot.retrieve_data(message.from_user.id, message.chat.id) as film_data:
         film_data['req_history']['req_date'] = date.today().strftime(DATE_FORMAT)
         film_data['sort_type'] = -1
@@ -117,6 +166,14 @@ def req_state(message: Message) -> None:
 
 @bot.message_handler(state=States.count)
 def state_count(message: Message) -> None:
+    """
+    Обработчик ввода количества фильмов для запроса.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     check_text = message.text
     if check_text.isdigit() and 1 <= int(check_text) <= 10:
         film_limit = int(check_text)
@@ -149,7 +206,15 @@ def state_count(message: Message) -> None:
 
 
 @bot.message_handler(func=lambda message: True)
-def greetings(message: Message) -> None:
+def other_message(message: Message) -> None:
+    """
+    Обработчик сторонних сообщений пользователя.
+
+    :param: message: Объект сообщения от пользователя.
+    :type: Message
+
+    """
+
     user_name = message.from_user.first_name
     bot.send_chat_action(chat_id=message.chat.id,
                          action='typing')
