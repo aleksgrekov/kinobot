@@ -31,7 +31,7 @@ class User(BaseModel):
     """
 
     user_id = IntegerField(primary_key=True)
-    username = CharField()
+    username = CharField(null=True)
     first_name = CharField()
     last_name = CharField(null=True)
 

@@ -49,7 +49,7 @@ def api_request(sort_type: int, limit: int, sort_field: str, range_value: str | 
     elif sort_field == 'rating.kp' and range_value:
         params[sort_field] = range_value
 
-    response = requests.get(url=ENVS.get('BASE_URL'), params=params, headers=headers)
+    response = requests.get(url=ENVS.get('BASE_URL'), params=params, headers=headers, timeout=5)
 
     return response
 
@@ -83,7 +83,6 @@ def suggested_films(sort_type: int, limit: int, sort_field: str, range_value: st
         exit(1)
 
     movie_data = movie_response.json()
-    print(movie_data)
 
     film_list = [Film(element.get('rating'),
                       element.get('movieLength'),
